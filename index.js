@@ -1,27 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient;
 
 async function main() {
-  /*const newUser = await prisma.users.create({
-    data: {
-      name: "Wuilmer",
-      lastname: "carbajal",
-      email: "@example.com"
-    }
-  })
-  console.log(newUser)*/
- /* const users = await prisma.users.findMany()
-  users.map(user => console.log(`el id: ${user.id} le pertenece a usuario: ${user.name}`))*/
+    const users = await prisma.users.findMany({
+        include: {
+            posts: true
+        }
+    })
 
-  const user = await prisma.users.findFirst({
-    where: {
-     OR: [
-       {name: "Wuilmer"},
-       {id: 1}
-     ]
-    }
-  });
-  console.log(user);
+    users.map((user) => {
+        console.log('--------------------------------')
+        console.log('Id: ', user.id)
+        console.log('Usuario: ', user.name)
+        console.log('Apellido: ', user.lastname)
+        console.log('Email: ', user.email)
+
+        user.posts.map((post) => {
+            
+            console.log('titulo: ', post.title)
+            console.log('contenido: ', post.content)
+        })
+    })
 }
 main();
